@@ -1,18 +1,17 @@
 from struct import *
 
-
 FMT = dict(
-    char='c',
-    int8='b',
-    uint8='B',
-    int16='h',
-    uint16='H',
-    int32='i',
-    uint32='I',
-    int64='q',
-    uint64='Q',
-    float='f',
-    double='d',
+    char='>c',
+    int8='>b',
+    uint8='>B',
+    int16='>h',
+    uint16='>H',
+    int32='>i',
+    uint32='>I',
+    int64='>q',
+    uint64='>Q',
+    float='>f',
+    double='>d',
 )
 
 
