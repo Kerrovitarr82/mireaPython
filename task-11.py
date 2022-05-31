@@ -73,7 +73,8 @@ def parse_d(buf, offs):
 
 
 def main(buf):
-    return parse_a(buf, 4)[0]
+    a = parse_a(buf, 4)[0]
+    return a
 
 
 print(main(b'\xb8XUK\x8c\xd1;\x85\x00\x00\x00\x03\x00\x00\x00^\xfb\xd6\xb2>\xde\xe0o\x18'

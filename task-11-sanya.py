@@ -48,11 +48,11 @@ class BinaryReader:
 
 
 def read_array(
-    source: str,
-    size: int,
-    address: int,
-    read: Callable[[BinaryReader], Any],
-    structure_size: int = 1,
+        source: str,
+        size: int,
+        address: int,
+        read: Callable[[BinaryReader], Any],
+        structure_size: int = 1,
 ):
     reader = BinaryReader(source=source, offset=address)
     values = []
@@ -62,24 +62,17 @@ def read_array(
 
 
 def read_f(reader: BinaryReader):
-    f1 = read_array(
-        source=reader.source,
-        size=8,
-        address=0,
-        read=lambda reader: reader.read_uint8()
-    )
+    f1 = []
+    for _ in range(8):
+        val = reader.read_uint8()
+        f1.append(val)
     f2 = reader.read_int16()
     f3 = reader.read_int64()
     return dict(F1=f1, F2=f2, F3=f3)
 
 
 def read_e(reader: BinaryReader):
-    e1 = read_array(
-        source=reader.source,
-        size=3,
-        address=0,
-        read=lambda reader: reader.read_uint8()
-    )
+    e1 = [reader.read_uint8(), reader.read_uint8(), reader.read_uint8()]
     e2 = reader.read_uint64()
     e3 = reader.read_int16()
     e4 = reader.read_int16()
@@ -94,6 +87,7 @@ def read_d(reader: BinaryReader):
         size=reader.read_uint32(),
         address=reader.read_uint32(),
         read=lambda reader: reader.read_uint16(),
+        structure_size=2,
     )
     return dict(D1=d1, D2=d2, D3=d3)
 
@@ -112,6 +106,7 @@ def read_b(reader: BinaryReader):
         address=reader.read_uint32(),
         read=lambda reader: read_c(reader),
     )
+    b2 = b2[0]
     return dict(B1=b1, B2=b2)
 
 
@@ -123,7 +118,20 @@ def read_a(reader: BinaryReader):
         address=reader.read_uint16(),
         read=lambda reader: read_b(reader)
     )
-    a3 = read_b(reader)
+    a2 = a2[0]
+    a3 = read_array(
+        source=reader.source,
+        size=reader.read_uint32(),
+        address=reader.read_uint32(),
+        read=lambda reader: read_array(
+            source=reader.source,
+            size=1,
+            address=reader.read_uint32(),
+            read=lambda reader: read_f(reader),
+        ),
+        structure_size=3
+    )
+    a3 = a3[0] + a3[1]
     return dict(A1=a1, A2=a2, A3=a3)
 
 
